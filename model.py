@@ -50,8 +50,32 @@ def top_k_filter(logits, k):
         output[i] = np.where(logits[i] >= threshold, logits[i], -np.inf)
     return output
 
-# Step 4 - top_p_filter (not yet solved)
-# TODO: implement
+# Step 4 - top_p_filter
+def top_p_filter(logits, p):
+    # TODO: keep smallest set of tokens whose cumulative prob >= p, mask the rest to -inf.
+    was_1d = logits.ndim == 1
+    if logits.ndim == 1:
+        logits = logits[None, :]
+
+    probs = stable_softmax(logits)
+    output = np.full_like(logits, -np.inf)
+
+
+    for i in range(logits.shape[0]):      # One row at a time
+        order = np.argsort(-probs[i])     # Highest probability first
+        sorted_probs = probs[i][order]
+        cumulative = np.cumsum(sorted_probs)
+
+        keep = cumulative <= p
+        keep[0] = True                    # Always keep best token
+
+        # Keep the token that crosses p
+        keep[np.argmax(cumulative > p)] = True
+
+        output[i][order[keep]] = logits[i][order[keep]]
+    if was_1d:
+        return output[0]
+    return output
 
 # Step 5 - sample_from_probs (not yet solved)
 # TODO: implement

@@ -67,8 +67,6 @@ def top_p_filter(logits, p):
         cumulative = np.cumsum(sorted_probs)
 
         keep = cumulative <= p
-        # keep[0] = True                    # Always keep best token
-
         # Keep the token that crosses p
         keep[np.argmax(cumulative > p)] = True
 

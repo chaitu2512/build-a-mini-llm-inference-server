@@ -78,8 +78,10 @@ def top_p_filter(logits, p):
 # Step 5 - sample_from_probs (not yet solved)
 # TODO: implement
 
-# Step 6 - greedy_select (not yet solved)
-# TODO: implement
+# Step 6 - greedy_select
+def greedy_select(logits):
+    # TODO: return the index of the maximum logit (ties -> lowest index).
+    return np.argmax(logits)
 
 # Step 7 - build_vocab (not yet solved)
 # TODO: implement
